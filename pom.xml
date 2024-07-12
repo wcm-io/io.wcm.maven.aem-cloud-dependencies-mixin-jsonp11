@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  #%L
+  wcm.io
+  %%
+  Copyright (C) 2024 wcm.io
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.wcm.maven</groupId>
+  <artifactId>io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>AEM Cloud Service Dependencies - Mixin for JSONP 1.1</name>
+  <description>Overrides dependencies from AEM Cloud Service Dependencies to downgrade to JSONP 1.1 (using javax.json) instead of latest version (which uses jakarta.json).</description>
+  <url>https://wcm.io</url>
+
+  <scm>
+    <connection>scm:git:https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11.git</connection>
+    <developerConnection>scm:git:https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11.git</developerConnection>
+    <url>https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <ciManagement>
+    <system>GitHub Actions</system>
+    <url>https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11/actions</url>
+  </ciManagement>
+
+  <inceptionYear>2024</inceptionYear>
+
+  <organization>
+    <name>wcm.io</name>
+    <url>https://wcm.io</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>wcm.io Community</name>
+      <organization>wcm.io</organization>
+      <organizationUrl>https://wcm.io</organizationUrl>
+    </developer>
+  </developers>
+
+  <properties>
+    <maven-release-plugin.version>3.1.0</maven-release-plugin.version>
+
+    <!-- repository settings -->
+    <distribution.snapshotRepositoryId>ossrh</distribution.snapshotRepositoryId>
+    <distribution.snapshotRepositoryUrl>https://oss.sonatype.org/content/repositories/snapshots</distribution.snapshotRepositoryUrl>
+    <distribution.releaseRepositoryId>ossrh</distribution.releaseRepositoryId>
+    <distribution.releaseRepositoryUrl>https://oss.sonatype.org/service/local/staging/deploy/maven2/</distribution.releaseRepositoryUrl>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.apache.johnzon</groupId>
+        <artifactId>johnzon-core</artifactId>
+        <!-- Switch back to old version using JSONP 1.1 (javax.json instead of jakarta.json) -->
+        <version>1.2.21</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.json</groupId>
+        <artifactId>jakarta.json-api</artifactId>
+        <!-- Stick with version 2.0.2 as newer version does not seem to work with org.glassfish:jakarta.json currently used by Sling Mocks as JSONP 2.1 implementation for other dependencies like Sling XSS -->
+        <version>2.0.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>org.apache.sling.contentparser.json</artifactId>
+        <!-- Switch back to older version using javax.json instead of jakarta.json -->
+        <version>2.0.0</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+             <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <inherited>false</inherited>
+        <configuration>
+          <skip>true</skip>
+          <skipDeploy>true</skipDeploy>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-default</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.8.6,)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.4.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>3.2.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.7.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${maven-release-plugin.version}</version>
+          <configuration>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <goals>deploy</goals>
+            <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.scm</groupId>
+              <artifactId>maven-scm-provider-gitexe</artifactId>
+              <version>2.1.0</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.maven.release</groupId>
+              <artifactId>maven-release-oddeven-policy</artifactId>
+              <version>${maven-release-plugin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.12.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.7.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.amashchenko.maven.plugin</groupId>
+          <artifactId>gitflow-maven-plugin</artifactId>
+          <version>1.21.0</version>
+          <inherited>false</inherited>
+          <configuration>
+            <skipTestProject>true</skipTestProject>
+            <verbose>true</verbose>
+            <pushRemote>false</pushRemote>
+            <versionsForceUpdate>true</versionsForceUpdate>
+            <postReleaseGoals>clean deploy -Prelease-profile</postReleaseGoals>
+            <commitMessagePrefix xml:space="preserve">[gitflow-maven-plugin] </commitMessagePrefix>
+            <commitMessages>
+              <!-- Add version number to commit messages -->
+              <hotfixStartMessage>Update versions for hotfix @{version}</hotfixStartMessage>
+              <hotfixFinishMessage>Update for next development version @{version}</hotfixFinishMessage>
+              <hotfixVersionUpdateMessage>Update to hotfix version @{version}</hotfixVersionUpdateMessage>
+              <releaseStartMessage>Update versions for release @{version}</releaseStartMessage>
+              <releaseFinishMessage>Update for next development version @{version}</releaseFinishMessage>
+              <releaseVersionUpdateMessage>Update for next development version @{version}</releaseVersionUpdateMessage>
+            </commitMessages>
+            <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.release</groupId>
+              <artifactId>maven-release-oddeven-policy</artifactId>
+              <version>${maven-release-plugin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+
+    <!-- Configuration to deploy into maven central -->
+    <profile>
+      <id>release-profile</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- sign the build -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- configure staging process at sonatype.-->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <inherited>false</inherited>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <!-- Deployed artifacts should go to staging to be reviewed before publish -->
+              <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+  <distributionManagement>
+    <repository>
+      <id>${distribution.releaseRepositoryId}</id>
+      <url>${distribution.releaseRepositoryUrl}</url>
+    </repository>
+    <snapshotRepository>
+      <id>${distribution.snapshotRepositoryId}</id>
+      <url>${distribution.snapshotRepositoryUrl}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+</project>
