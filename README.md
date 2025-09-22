@@ -1,6 +1,6 @@
 <img src="https://wcm.io/images/favicon-16@2x.png"/> AEM Cloud Service Dependencies - Mixin for JSONP 1.1
 ======
-[![Build](https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11/workflows/Build/badge.svg?branch=develop)](https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11/actions?query=workflow%3ABuild+branch%3Adevelop)
+[![Build](https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11/actions/workflows/maven-build.yml/badge.svg?branch=develop)](https://github.com/wcm-io/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11/actions?query=workflow%3ABuild+branch%3Adevelop)
 [![Maven Central](https://img.shields.io/maven-central/v/io.wcm.maven/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11)](https://repo1.maven.org/maven2/io/wcm/maven/io.wcm.maven.aem-cloud-dependencies-mixin-jsonp11/)
 
 Overrides dependencies from AEM Cloud Service Dependencies to downgrade to JSONP 1.1 (using javax.json) instead of latest version (which uses jakarta.json).
